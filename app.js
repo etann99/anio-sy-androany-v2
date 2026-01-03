@@ -95,7 +95,7 @@ function init() {
 
 function updateDate() {
   const d = new Date();
-  const dayNames = ['Alahady', 'Alatsinainy', 'Talata', 'Alarobia', 'Alakamisy', 'Zoma', 'Asabotsy'];
+  const dayNames = ['Alahady', 'Alatsinainy', 'Talata', 'Alarobia', 'Alakamisy', 'Zoma', 'Sabotsy'];
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mey', 'Jon', 'Jol', 'Aog', 'Sep', 'Okt', 'Nov', 'Des'];
   
   const dayName = dayNames[d.getDay()];
