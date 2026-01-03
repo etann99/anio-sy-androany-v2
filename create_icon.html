@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas192" width="192" height="192"></canvas>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+    
+    <script>
+        function createIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // MORNING SIDE (Top-left triangle) - Blue sky
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(size, 0);
+            ctx.lineTo(0, size);
+            ctx.closePath();
+            
+            // Morning gradient (light blue sky)
+            const morningGrad = ctx.createLinearGradient(0, 0, size/2, size/2);
+            morningGrad.addColorStop(0, '#93c5fd');
+            morningGrad.addColorStop(1, '#bfdbfe');
+            ctx.fillStyle = morningGrad;
+            ctx.fill();
+            
+            // EVENING SIDE (Bottom-right triangle) - Dark night
+            ctx.beginPath();
+            ctx.moveTo(size, 0);
+            ctx.lineTo(size, size);
+            ctx.lineTo(0, size);
+            ctx.closePath();
+            
+            // Evening gradient (dark purple/blue)
+            const eveningGrad = ctx.createLinearGradient(size/2, size/2, size, size);
+            eveningGrad.addColorStop(0, '#1e1b4b');
+            eveningGrad.addColorStop(1, '#312e81');
+            ctx.fillStyle = eveningGrad;
+            ctx.fill();
+            
+            // Draw diagonal line
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = size * 0.01;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(size, size);
+            ctx.stroke();
+            
+            // Function to draw "A" letter
+            function drawA(x, y, letterSize, color) {
+                ctx.fillStyle = color;
+                ctx.font = `bold ${letterSize}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('A', x, y);
+            }
+            
+            // Morning "A" (top-left, dark blue text)
+            const letterSize = size * 0.35;
+            drawA(size * 0.25, size * 0.25, letterSize, '#1e3a8a');
+            
+            // Evening "A" (bottom-right, white text)
+            drawA(size * 0.75, size * 0.75, letterSize, '#ffffff');
+            
+            // Optional: Add small sun icon in morning side
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(size * 0.15, size * 0.15, size * 0.08, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Optional: Add small moon icon in evening side
+            ctx.fillStyle = '#e5e7eb';
+            ctx.beginPath();
+            ctx.arc(size * 0.85, size * 0.85, size * 0.06, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Add small crescent effect to moon
+            ctx.fillStyle = '#312e81';
+            ctx.beginPath();
+            ctx.arc(size * 0.88, size * 0.83, size * 0.05, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // Create both icons
+        createIcon(document.getElementById('canvas192'));
+        createIcon(document.getElementById('canvas512'));
+        
+        // Auto-download
+        setTimeout(() => {
+            // Download 192x192
+            const link192 = document.createElement('a');
+            link192.download = 'icon-192.png';
+            link192.href = document.getElementById('canvas192').toDataURL();
+            link192.click();
+            
+            // Download 512x512
+            setTimeout(() => {
+                const link512 = document.createElement('a');
+                link512.download = 'icon-512.png';
+                link512.href = document.getElementById('canvas512').toDataURL();
+                link512.click();
+            }, 500);
+        }, 500);
+    </script>
+</body>
+</html>

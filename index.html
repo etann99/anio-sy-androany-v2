@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="mg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#60a5fa" />
+  <meta name="description" content="Anio sy Androany - Ilay fomba isainana ny isan'andro" />
+  
+  <title>Anio sy Androany</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
+  <style>
+    :root {
+      --card-w: 980px;
+      --radius: 24px;
+      --border: rgba(255,255,255,.18);
+      --text: rgba(255,255,255,.95);
+      --muted: rgba(255,255,255,.75);
+      --shadow: 0 22px 70px rgba(0,0,0,.30);
+      --glass: rgba(255,255,255,.10);
+      --btn: rgba(255,255,255,.15);
+      --btnHover: rgba(255,255,255,.22);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 1.2s ease;
+    }
+
+    /* ---------------- THEMES ---------------- */
+    
+    /* MORNING THEME */
+    body.theme-morning {
+      background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 40%, #bfdbfe 70%, #eff6ff 100%);
+    }
+
+    /* Morning Clouds (CSS Animation) */
+    .clouds {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+    body.theme-morning .clouds { opacity: 1; }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255,255,255,0.4);
+      border-radius: 100px;
+      filter: blur(8px);
+      animation: drift linear infinite;
+    }
+    .cloud::after, .cloud::before {
+      content: ''; position: absolute; background: inherit; border-radius: 50%;
+    }
+    .cloud::after { width: 50px; height: 50px; top: -25px; left: 25px; }
+    .cloud::before { width: 70px; height: 70px; top: -35px; left: 50px; }
+
+    /* Cloud instances */
+    .c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 45s; opacity: 0.8; }
+    .c2 { width: 160px; height: 50px; top: 35%; left: -200px; animation-duration: 65s; animation-delay: -20s; opacity: 0.6; }
+    .c3 { width: 100px; height: 30px; top: 65%; left: -120px; animation-duration: 55s; animation-delay: -10s; opacity: 0.5; }
+
+    @keyframes drift {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(120vw); }
+    }
+
+
+    /* EVENING THEME */
+    body.theme-evening {
+      background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    }
+
+    /* Night Stars Container */
+    .stars {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+    body.theme-evening .stars { opacity: 1; }
+
+    /* Static twinkling stars */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Shooting Star */
+    .shooting-star {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 4px; height: 4px;
+      background: linear-gradient(-45deg, white, rgba(0,0,255,0));
+      border-radius: 999px;
+      filter: drop-shadow(0 0 6px white);
+      animation: shoot 6s ease-in-out infinite;
+      opacity: 0;
+    }
+    .shooting-star::before {
+      content: ''; position: absolute;
+      top: 50%; transform: translateY(-50%);
+      width: 100px; height: 1px;
+      background: linear-gradient(90deg, white, transparent);
+      right: 0;
+    }
+    
+    @keyframes shoot {
+      0% { transform: translate(300px, -300px) rotate(-45deg); opacity: 0; }
+      10% { opacity: 1; }
+      20% { transform: translate(-300px, 300px) rotate(-45deg); opacity: 0; }
+      100% { opacity: 0; }
+    }
+    
+    /* Randomize shooting stars */
+    .s1 { top: 20%; left: 80%; animation-delay: 2s; }
+    .s2 { top: 10%; left: 50%; animation-delay: 8s; }
+
+
+    /* ---------------- UI LAYOUT ---------------- */
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+    .brand span { font-size: 13px; color: var(--muted); }
+
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      background: var(--btn);
+      border: 1px solid var(--border);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--btnHover); transform: translateY(-1px); }
+    .btn-danger { background: rgba(255, 99, 99, 0.15); border-color: rgba(255, 99, 99, 0.3); }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 850px) {
+      .main-grid { grid-template-columns: 1.2fr 0.8fr; }
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    #capture-area {
+      padding: 32px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+    }
+
+    .malagasy-header {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+      opacity: 0.95;
+    }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+    .mode-tag { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+    .card-date { font-size: 26px; font-weight: 700; margin: 0; }
+    .mood-display { 
+      padding: 6px 14px; 
+      background: rgba(255,255,255,0.1); 
+      border-radius: 20px; 
+      font-size: 14px; 
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .content-block { margin-bottom: 24px; }
+    .block-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+    .block-text { font-size: 18px; line-height: 1.5; font-weight: 400; white-space: pre-wrap; color: inherit; }
+    .highlight { font-size: 20px; font-weight: 500; }
+    
+    .footer-mark { 
+      margin-top: 20px; 
+      padding-top: 15px; 
+      border-top: 1px solid rgba(255,255,255,0.1); 
+      font-size: 12px; 
+      color: var(--muted); 
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .input-group label { 
+      display: block; 
+      font-size: 13px; 
+      margin-bottom: 10px; 
+      color: var(--text); 
+      letter-spacing: 0.01em;
+      line-height: 1.4;
+    }
+    
+    input, textarea {
+      width: 100%;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px;
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus { border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.3); }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .mood-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .mood-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mood-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+    .mood-btn.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.4); }
+
+    .custom-mood-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .custom-mood-input {
+      flex: 1;
+      font-size: 13px;
+      padding: 10px 14px;
+    }
+    .or-divider {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body class="theme-morning">
+  <div class="clouds">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+  </div>
+
+  <div class="stars">
+    <div class="shooting-star s1"></div>
+    <div class="shooting-star s2"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <h1>Anio sy Androany</h1>
+        <span>Ilay fomba isainana ny isan'andro</span>
+      </div>
+      <div class="controls">
+        <button class="btn" onclick="toggleMode()">Mamadika ny fotoana</button>
+        <button class="btn" onclick="downloadImage()">Misintona ny Karatra</button>
+        <button class="btn btn-danger" onclick="resetData()">Mamafa</button>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card" id="export-target">
+        <div id="capture-area">
+          <div class="malagasy-header" id="malagasy-title">Ny Anio</div>
+
+          <div class="card-top">
+            <div>
+              <div class="mode-tag" id="disp-mode">FANAOKELIN'NY MARAINA</div>
+              <h2 class="card-date" id="disp-date">Asabotsy, Jan 3</h2>
+            </div>
+            <div class="mood-display" id="disp-mood">Toe-po: —</div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-label" id="lbl-obj">Ny tanjona anio</div>
+            <div class="block-text highlight" id="disp-obj">—</div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-label" id="lbl-msg">Hafatra ho an'ny Tena</div>
+            <div class="block-text" id="disp-msg">—</div>
+          </div>
+
+          <div class="footer-mark">
+            <span>Anio sy Androany • Fanaokely isan'andro</span>
+            <span id="meta-date">2026-01-03</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card form-panel">
+        <div class="input-group">
+          <label id="lbl-mood-select">Inona ilay toe-po hoentinao miatrika ny anio ?</label>
+          <div class="mood-selector" id="mood-options"></div>
+          <div class="or-divider">Na manoratra ny anao manokana</div>
+          <div class="custom-mood-wrapper">
+            <input type="text" id="custom-mood-input" class="custom-mood-input" placeholder="Soritsorito ny toe-ponao" maxlength="30">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label id="lbl-inp-obj">Inona no tanjonao manokana anio ?</label>
+          <input type="text" id="inp-obj" placeholder="Manorata eto..." maxlength="80">
+        </div>
+
+        <div class="input-group">
+          <label id="lbl-inp-msg">Manorata hafatra ho anao (teny fankasitrahana, firariana, fankaherezana,...)</label>
+          <textarea id="inp-msg" placeholder="Manorata eto..." maxlength="200"></textarea>
+        </div>
+
+        <button class="btn" style="width:100%; background:white; color:black; font-weight:600; margin-top:10px;" onclick="saveData()">Mitahiry ny voasoratra</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
