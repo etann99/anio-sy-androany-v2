@@ -1,9 +1,10 @@
-const CACHE_NAME = 'anio-sy-androany-v1';
+const CACHE_NAME = 'anio-sy-androany-v3';
 const urlsToCache = [
   '/',
   '/index.html',
   '/app.js',
   '/manifest.json',
+  '/logo.png',
   '/icon-192.png',
   '/icon-512.png',
   'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'

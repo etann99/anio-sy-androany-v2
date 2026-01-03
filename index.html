@@ -155,8 +155,19 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .brand h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
-    .brand span { font-size: 13px; color: var(--muted); }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .brand-text h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+    .brand-text span { font-size: 13px; color: var(--muted); }
 
     .controls { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
@@ -308,8 +319,11 @@
   <div class="wrap">
     <div class="header">
       <div class="brand">
-        <h1>Anio sy Androany</h1>
-        <span>Ilay fomba isainana ny isan'andro</span>
+        <img src="logo.png" alt="Anio sy Androany Logo">
+        <div class="brand-text">
+          <h1>Anio sy Androany</h1>
+          <span>Ilay fomba isainana ny isan'andro</span>
+        </div>
       </div>
       <div class="controls">
         <button class="btn" onclick="toggleMode()">Mamadika ny fotoana</button>
@@ -326,7 +340,7 @@
           <div class="card-top">
             <div>
               <div class="mode-tag" id="disp-mode">FANAOKELIN'NY MARAINA</div>
-              <h2 class="card-date" id="disp-date">Sabotsy, Jan 3</h2>
+              <h2 class="card-date" id="disp-date">Asabotsy, Jan 3</h2>
             </div>
             <div class="mood-display" id="disp-mood">Toe-po: —</div>
           </div>

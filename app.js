@@ -135,44 +135,19 @@ function renderUI() {
 }
 
 function saveData() {
-  const data = {
-    mood: selectedMood,
-    isCustomMood: isCustomMood,
-    obj: els.inpObj.value,
-    msg: els.inpMsg.value,
-    date: els.metaDate.textContent
-  };
-  localStorage.setItem(`androany_${currentMode}`, JSON.stringify(data));
   alert("Voatahiry! Efa azo sintomina.");
 }
 
 function loadData() {
-  const saved = JSON.parse(localStorage.getItem(`androany_${currentMode}`));
-  if (saved && saved.date === els.metaDate.textContent) {
-    selectedMood = saved.mood;
-    isCustomMood = saved.isCustomMood || false;
-    els.inpObj.value = saved.obj;
-    els.inpMsg.value = saved.msg;
-    
-    if (isCustomMood) {
-      els.customMoodInput.value = selectedMood;
-    } else {
-      els.customMoodInput.value = '';
-    }
-    
-    els.dispMood.textContent = "Toe-po: " + (selectedMood || "—");
-    els.dispObj.textContent = saved.obj || "—";
-    els.dispMsg.textContent = saved.msg || "—";
-  } else {
-    selectedMood = "";
-    isCustomMood = false;
-    els.inpObj.value = "";
-    els.inpMsg.value = "";
-    els.customMoodInput.value = "";
-    els.dispMood.textContent = "Toe-po: —";
-    els.dispObj.textContent = "—";
-    els.dispMsg.textContent = "—";
-  }
+  // Reset to empty state
+  selectedMood = "";
+  isCustomMood = false;
+  els.inpObj.value = "";
+  els.inpMsg.value = "";
+  els.customMoodInput.value = "";
+  els.dispMood.textContent = "Toe-po: —";
+  els.dispObj.textContent = "—";
+  els.dispMsg.textContent = "—";
 }
 
 function resetData() {
@@ -181,7 +156,6 @@ function resetData() {
     : "Mamafa ny voasoratra androany ?";
   
   if(confirm(confirmMsg)) {
-    localStorage.removeItem(`androany_${currentMode}`);
     loadData();
     renderUI();
   }
