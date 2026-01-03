@@ -103,7 +103,12 @@ function updateDate() {
   const day = d.getDate();
   
   els.dispDate.textContent = `${dayName}, ${monthName} ${day}`;
-  els.metaDate.textContent = d.toISOString().split('T')[0];
+  
+  // Format as DD-MM-YYYY for footer
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  els.metaDate.textContent = `${dd}-${mm}-${yyyy}`;
 }
 
 function renderUI() {
@@ -132,10 +137,6 @@ function renderUI() {
     };
     els.moodOptions.appendChild(btn);
   });
-}
-
-function saveData() {
-  alert("Voatahiry! Efa azo sintomina.");
 }
 
 function loadData() {

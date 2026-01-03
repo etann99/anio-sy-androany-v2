@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anio-sy-androany-v3';
+const CACHE_NAME = 'anio-sy-androany-v5';
 const urlsToCache = [
   '/',
   '/index.html',
