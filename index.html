@@ -107,7 +107,7 @@
       50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Shooting Star */
+    /* Shooting Stars */
     .shooting-star {
       position: absolute;
       top: 50%; left: 50%;
@@ -137,7 +137,6 @@
     .s1 { top: 20%; left: 80%; animation-delay: 2s; }
     .s2 { top: 10%; left: 50%; animation-delay: 8s; }
 
-
     /* ---------------- UI LAYOUT ---------------- */
     .wrap {
       max-width: 1080px;
@@ -155,19 +154,8 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand img {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .brand-text h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
-    .brand-text span { font-size: 13px; color: var(--muted); }
+    .brand h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+    .brand span { font-size: 13px; color: var(--muted); }
 
     .controls { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
@@ -193,6 +181,7 @@
       .main-grid { grid-template-columns: 1.2fr 0.8fr; }
     }
 
+    /* CAPTURE CARD (The Aesthetic Part) */
     .card {
       background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
@@ -202,11 +191,14 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       transition: background 0.3s, color 0.3s;
+      position: relative;
     }
     
     #capture-area {
       padding: 32px;
       background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+      position: relative;
+      z-index: 2;
     }
 
     .malagasy-header {
@@ -243,6 +235,7 @@
       justify-content: space-between;
     }
 
+    /* INPUT FORM */
     .form-panel {
       padding: 24px;
       display: flex;
@@ -319,11 +312,8 @@
   <div class="wrap">
     <div class="header">
       <div class="brand">
-        <img src="logo.png" alt="Anio sy Androany Logo">
-        <div class="brand-text">
-          <h1>Anio sy Androany</h1>
-          <span>Ilay fomba isainana ny isan'andro</span>
-        </div>
+        <h1>Anio sy Androany</h1>
+        <span>Ilay fomba isainana ny isan'andro</span>
       </div>
       <div class="controls">
         <button class="btn" onclick="toggleMode()">Mamadika ny fotoana</button>
@@ -339,7 +329,7 @@
           <div class="card-top">
             <div>
               <div class="mode-tag" id="disp-mode">FANAOKELIN'NY MARAINA</div>
-              <h2 class="card-date" id="disp-date">Asabotsy, Jan 3</h2>
+              <h2 class="card-date" id="disp-date">Sabotsy, 4 Janoary 2026</h2>
             </div>
             <div class="mood-display" id="disp-mood">Toe-po: —</div>
           </div>
@@ -356,7 +346,7 @@
 
           <div class="footer-mark">
             <span>Anio sy Androany • Fanaokely isan'andro</span>
-            <span id="meta-date">03-01-2026</span>
+            <span id="meta-date">04-01-2026</span>
           </div>
         </div>
       </div>

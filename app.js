@@ -39,6 +39,7 @@ let isCustomMood = false;
 // DOM Elements
 const els = {
   body: document.body,
+  card: document.getElementById('export-target'),
   malagasyTitle: document.getElementById('malagasy-title'),
   dispMode: document.getElementById('disp-mode'),
   dispDate: document.getElementById('disp-date'),
@@ -96,13 +97,15 @@ function init() {
 function updateDate() {
   const d = new Date();
   const dayNames = ['Alahady', 'Alatsinainy', 'Talata', 'Alarobia', 'Alakamisy', 'Zoma', 'Sabotsy'];
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mey', 'Jon', 'Jol', 'Aog', 'Sep', 'Okt', 'Nov', 'Des'];
+  const monthNames = ['Janoary', 'Febroary', 'Martsa', 'Aprily', 'Mey', 'Jona', 'Jolay', 'Aogositra', 'Septambra', 'Oktobra', 'Novambra', 'Desambra'];
   
   const dayName = dayNames[d.getDay()];
   const monthName = monthNames[d.getMonth()];
   const day = d.getDate();
+  const year = d.getFullYear();
   
-  els.dispDate.textContent = `${dayName}, ${monthName} ${day}`;
+  // Full date for card: "Sabotsy, 4 Janoary 2026"
+  els.dispDate.textContent = `${dayName}, ${day} ${monthName} ${year}`;
   
   // Format as DD-MM-YYYY for footer
   const dd = String(d.getDate()).padStart(2, '0');
@@ -112,6 +115,7 @@ function updateDate() {
 }
 
 function renderUI() {
+  // Theme
   els.body.className = currentMode === 'morning' ? 'theme-morning' : 'theme-evening';
   
   const txt = CONFIG[currentMode];
@@ -140,7 +144,7 @@ function renderUI() {
 }
 
 function loadData() {
-  // Reset to empty state
+  // Reset to empty state (no localStorage)
   selectedMood = "";
   isCustomMood = false;
   els.inpObj.value = "";
@@ -174,12 +178,40 @@ async function downloadImage() {
   const originalBg = card.style.background;
   const originalColor = card.style.color;
   
+  // Create temporary canvas for decoration effects
+  const decorationCanvas = document.createElement('canvas');
+  decorationCanvas.style.position = 'absolute';
+  decorationCanvas.style.top = '0';
+  decorationCanvas.style.left = '0';
+  decorationCanvas.style.width = '100%';
+  decorationCanvas.style.height = '100%';
+  decorationCanvas.style.pointerEvents = 'none';
+  decorationCanvas.style.zIndex = '1';
+  
+  // Insert decoration canvas before capture area
+  const captureArea = document.getElementById('capture-area');
+  card.insertBefore(decorationCanvas, captureArea);
+  
+  // Set canvas size to match card
+  const rect = card.getBoundingClientRect();
+  decorationCanvas.width = rect.width;
+  decorationCanvas.height = rect.height;
+  
+  const ctx = decorationCanvas.getContext('2d');
+  
   if (currentMode === 'morning') {
     card.style.background = 'linear-gradient(135deg, #93c5fd 0%, #eff6ff 100%)';
     card.style.color = '#1e3a8a';
+    
+    // Draw 4 larger clouds
+    drawClouds(ctx, decorationCanvas.width, decorationCanvas.height);
+    
   } else {
     card.style.background = 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)';
     card.style.color = 'white';
+    
+    // Draw subtle stars
+    drawStars(ctx, decorationCanvas.width, decorationCanvas.height);
   }
 
   try {
@@ -197,9 +229,92 @@ async function downloadImage() {
   } catch (e) {
     alert("Tsy afaka namoaka ny sary");
   } finally {
+    // Remove decoration canvas
+    card.removeChild(decorationCanvas);
+    
+    // Restore original styles
     card.style.background = originalBg;
     card.style.color = originalColor;
   }
+}
+
+// Draw 4 larger, fluffy clouds for morning cards
+function drawClouds(ctx, width, height) {
+  ctx.globalAlpha = 0.12; // More subtle
+  
+  const clouds = [
+    { x: width * 0.20, y: height * 0.15, size: 80 },  // Larger clouds
+    { x: width * 0.70, y: height * 0.25, size: 75 },
+    { x: width * 0.35, y: height * 0.70, size: 70 },
+    { x: width * 0.80, y: height * 0.60, size: 78 }
+  ];
+  
+  clouds.forEach(cloud => {
+    drawCloud(ctx, cloud.x, cloud.y, cloud.size);
+  });
+  
+  ctx.globalAlpha = 1.0;
+}
+
+// Draw a single fluffy cloud
+function drawCloud(ctx, x, y, size) {
+  ctx.fillStyle = 'white';
+  
+  // Main cloud body (3 circles)
+  ctx.beginPath();
+  ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
+  ctx.arc(x - size * 0.3, y, size * 0.4, 0, Math.PI * 2);
+  ctx.arc(x + size * 0.3, y, size * 0.4, 0, Math.PI * 2);
+  ctx.arc(x - size * 0.15, y - size * 0.3, size * 0.35, 0, Math.PI * 2);
+  ctx.arc(x + size * 0.15, y - size * 0.3, size * 0.35, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Draw subtle starry sky for evening cards
+function drawStars(ctx, width, height) {
+  // Draw 50 stars - more subtle with lower opacity
+  for (let i = 0; i < 50; i++) {
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+    const size = Math.random() * 1.8 + 0.3; // Smaller: 0.3 to 2.1px
+    const opacity = Math.random() * 0.4 + 0.15; // Much more subtle: 0.15 to 0.55
+    
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = 'white';
+    
+    // Mostly simple circle stars (less complex)
+    if (Math.random() > 0.8) {
+      // Only 20% are 4-pointed stars
+      drawStar4Point(ctx, x, y, size);
+    } else {
+      // 80% are simple circles
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  
+  ctx.globalAlpha = 1.0;
+}
+
+// Draw a 4-pointed star
+function drawStar4Point(ctx, x, y, size) {
+  ctx.save();
+  ctx.translate(x, y);
+  
+  ctx.beginPath();
+  ctx.moveTo(0, -size * 2);
+  ctx.lineTo(size * 0.3, -size * 0.3);
+  ctx.lineTo(size * 2, 0);
+  ctx.lineTo(size * 0.3, size * 0.3);
+  ctx.lineTo(0, size * 2);
+  ctx.lineTo(-size * 0.3, size * 0.3);
+  ctx.lineTo(-size * 2, 0);
+  ctx.lineTo(-size * 0.3, -size * 0.3);
+  ctx.closePath();
+  ctx.fill();
+  
+  ctx.restore();
 }
 
 // Start the app
